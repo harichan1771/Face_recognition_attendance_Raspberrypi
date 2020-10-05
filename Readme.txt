@@ -1,4 +1,4 @@
-This code woks for all linux oerating environments. Ubuntu particularly is very good option for programming machine learning codes and python programmes. 
+This code works for all linux oerating environments. Ubuntu particularly is very good option for programming machine learning codes and python programmes. 
 If you are doing this project, you might have already installed python 2.7 or 3.5+ version with opencv installed.
 There are few things which is needed to be installed and setup.
 First thing is dlib library for opencv, a tool for implementing a variety of machine learning algorithms, including classification, regression, clustering, data transformation, and structured prediction.
