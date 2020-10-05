@@ -25,7 +25,7 @@ if __name__ == '__main__':
 
 # Create arrays of known face encodings and their names
 
-    face_names_ = list(all_face_encodings.keys())   #created an encoding file seperately
+    face_names_ = list(all_face_encodings.keys())   # an encoding file is seperately created
     face_encodings_ = np.array(list(all_face_encodings.values()))
 
     
