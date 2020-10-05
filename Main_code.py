@@ -1,38 +1,38 @@
-from threading import Thread
-import face_recognition
-import cv2
-import numpy as np
-import pickle
-from firebase import firebase
+from threading import Thread             #for running 2 or more programmes at same time
+import face_recognition                  #library used for recognising faces
+import cv2                               #computer vision library
+import numpy as np                       #numpy
+import pickle                            # used for importing files in a python project
+from firebase import firebase            #google's database 
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 import time
 
-def func2(namae, roku):
-    fb.put('GNITC',roku,namae)
+def func2(namae, roku):         #values of this function is comming from face recognition results which are name and r_no which are replaced as namae and roku
+    fb.put('GNITC',roku,namae)  #putting up all the data in firebase
     print(namae)
     print ('updated')
 
 
 
 if __name__ == '__main__':
-    fb = firebase.FirebaseApplication('https://kazukame-34d64.firebaseio.com/', None)
+    fb = firebase.FirebaseApplication('https://kazukame-34d64.firebaseio.com/', None)   #create a firebase database and get this link from there
     video_capture = cv2.VideoCapture(0)
     video_capture.set(cv2.CAP_PROP_FPS, 2)
-    with open('dataset_faces.dat', 'rb') as f:
+    with open('dataset_faces.dat', 'rb') as f:           #face encoding file is a pre-compiled python file which gives face data in program readable format
         all_face_encodings = pickle.load(f)
 
 
 # Create arrays of known face encodings and their names
 
-    face_names_ = list(all_face_encodings.keys())
+    face_names_ = list(all_face_encodings.keys())   #created an encoding file seperately
     face_encodings_ = np.array(list(all_face_encodings.values()))
 
     
 # Initialize some variables
-    pupil=['coo']
-    attandanc=[]
-    ran = 0
+    pupil=['coo']                #random list item
+    attandanc=[]                 #list of students
+    ran = 0                      #random string variable for iteration
     face_locations = []
     face_encodings = []
     face_names = []
@@ -57,7 +57,7 @@ if __name__ == '__main__':
             face_names = []
             for face_encoding in face_encodings:
             # See if the face is a match for the known face(s)
-                matches = face_recognition.compare_faces(face_encodings_, face_encoding,tolerance=0.55)
+                matches = face_recognition.compare_faces(face_encodings_, face_encoding,tolerance=0.55)  #you can increase tolerance for more strict criteria
                 name = "Unknown"
 
             # # If a match was found in known_face_encodings, just use the first one.
@@ -72,7 +72,7 @@ if __name__ == '__main__':
                     name = face_names_[best_match_index]
                     r_no = best_match_index
 
-                face_names.append(name)
+                face_names.append(name)   #creating list of students appeared in front of camera
 
         process_this_frame = not process_this_frame
 
@@ -94,24 +94,20 @@ if __name__ == '__main__':
             cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
             #print(name)
             
-            for ran in pupil:
-                if name == 'Unknown':
+            for ran in pupil:                        #pupil is temporary list created for adding the attendance
+                if name == 'Unknown':                #if unknown person appears, skip adding that one
                     break
-                if name not in pupil:
+                if name not in pupil:                # otherwise add that person in both main list(attandanc) and temporary list(pupil)
                     attandanc.append(name)       
-                    pupil.append(name)
-                    Thread(target=func2(name,r_no)).start()
+                    pupil.append(name)               
+                    Thread(target=func2(name,r_no)).start()    #initiated a thread with 2 values name and roll number 
                 else:
                     break
             print(attandanc)
 
-
     # Display the resulting image
         #cv2.imshow('Video', frame)
         
-        
-        
-
     # Hit 'q' on the keyboard to quit!
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
